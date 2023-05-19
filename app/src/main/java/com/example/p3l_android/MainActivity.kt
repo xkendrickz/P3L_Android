@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
@@ -82,7 +83,8 @@ class MainActivity : AppCompatActivity() {
                 inputPassword.setError(null)
             }
             if(inputUsername.getError() == null && inputPassword.getError() == null) checkLogin = true
-            if(checkLogin) {
+            if(!checkLogin) return@OnClickListener
+            else{
                 login()
             }
         })
@@ -96,43 +98,38 @@ class MainActivity : AppCompatActivity() {
         )
         val stringRequest: StringRequest =
             object : StringRequest(Method.POST, UserApi.LOGIN, Response.Listener { response ->
-                val gson = Gson()
-                var user = gson.fromJson(response, Member::class.java)
+                try {
+                    val gson = Gson()
+                    val jsonResponse = JSONObject(response)
+                    val userResponse = gson.fromJson(jsonResponse.getString("data"), Member::class.java)
 
-                if(user != null)
-                    Toast.makeText(this@MainActivity, "Berhasil Login", Toast.LENGTH_SHORT).show()
-//                    MotionToast.createToast(this@MainActivity,
-//                        "Hurray success",
-//                        "BERHASIL LOGIN",
-//                        MotionToastStyle.SUCCESS,
-//                        MotionToast.GRAVITY_BOTTOM,
-//                        MotionToast.LONG_DURATION,
-//                        ResourcesCompat.getFont(this, www.sanju.motiontoast.R.font.helvetica_regular))
-                val sharedPreference =  getSharedPreferences(myPreference, Context.MODE_PRIVATE)
-                var editor = sharedPreference.edit()
-                editor.putString("username",inputUsername.getEditText()?.getText().toString())
-                editor.apply()
+                    if (userResponse != null) {
+                        val userId = userResponse.id_member // Get the user ID from the response
+                        Toast.makeText(this@MainActivity, "Berhasil Login", Toast.LENGTH_SHORT).show()
 
-                val moveHome = Intent(this@MainActivity, HomeActivity::class.java)
-                startActivity(moveHome)
-                setLoading(false)
+                        val sharedPreference = getSharedPreferences(myPreference, Context.MODE_PRIVATE)
+                        val editor = sharedPreference.edit()
+                        editor.putInt("userId", userId) // Store the user ID in shared preferences
+                        Log.d("userId", userId.toString())
+                        editor.apply()
+
+                        val moveHome = Intent(this@MainActivity, HomeActivity::class.java)
+                        startActivity(moveHome)
+                    }
+                    setLoading(false)
+                } catch (e: Exception) {
+                    setLoading(false)
+                    Toast.makeText(this@MainActivity, e.message, Toast.LENGTH_LONG).show()
+                }
             }, Response.ErrorListener { error ->
                 setLoading(false)
                 try {
                     val responseBody = String(error.networkResponse.data, StandardCharsets.UTF_8)
                     val errors = JSONObject(responseBody)
                     Toast.makeText(this@MainActivity, "message", Toast.LENGTH_LONG).show()
-//                    MotionToast.createToast(this@MainActivity,
-//                        "Failed",
-//                        errors.getString("message"),
-//                        MotionToastStyle.ERROR,
-//                        MotionToast.GRAVITY_BOTTOM,
-//                        MotionToast.LONG_DURATION,
-//                        ResourcesCompat.getFont(this, www.sanju.motiontoast.R.font.helvetica_regular))
                 } catch (e: Exception) {
                     Toast.makeText(this@MainActivity, e.message, Toast.LENGTH_LONG).show()
                 }
-
             }) {
                 @Throws(AuthFailureError::class)
                 override fun getHeaders(): Map<String, String> {
@@ -156,6 +153,7 @@ class MainActivity : AppCompatActivity() {
         // Menambahkan request ke request queue
         queue!!.add(stringRequest)
     }
+
 
     fun getBundle(){
         try{
