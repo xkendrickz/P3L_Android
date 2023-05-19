@@ -11,17 +11,22 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
+import androidx.databinding.adapters.TextViewBindingAdapter.setText
 import com.android.volley.AuthFailureError
 import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.example.p3l_android.api.UserApi
 import com.example.p3l_android.databinding.ActivityMainBinding
+import com.example.p3l_android.models.Auth
+import com.example.p3l_android.models.Member
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.gson.Gson
 import org.json.JSONObject
 import java.nio.charset.StandardCharsets
+import java.util.ResourceBundle.getBundle
 
 class MainActivity : AppCompatActivity() {
     private lateinit var inputUsername: TextInputLayout
@@ -51,13 +56,13 @@ class MainActivity : AppCompatActivity() {
         layoutLoading = findViewById(R.id.layout_loading)
         inputUsername = findViewById(R.id.inputLayoutUsername)
         inputPassword = findViewById(R.id.inputLayoutPassword)
-        val textBtnSignUp : TextView = findViewById(R.id.textBtnSignUp)
+        val textBtnGuest : TextView = findViewById(R.id.textBtnGuest)
         val btnLogin: Button = findViewById(R.id.btnLogin)
         getBundle()
         setText()
 
-        textBtnSignUp.setOnClickListener {
-            val moveRegister = Intent(this@MainActivity, RegisterActivity::class.java)
+        textBtnGuest.setOnClickListener {
+            val moveRegister = Intent(this@MainActivity, GuestActivity::class.java)
             startActivity(moveRegister)
         }
 
@@ -77,19 +82,9 @@ class MainActivity : AppCompatActivity() {
                 inputPassword.setError(null)
             }
             if(inputUsername.getError() == null && inputPassword.getError() == null) checkLogin = true
-            if(inputUsername.getEditText()?.getText().toString() == "admin" && inputPassword.getEditText()?.getText().toString() == "admin"){
-                val moveAdmin = Intent(this@MainActivity, AdminActivity::class.java)
-                startActivity(moveAdmin)
-            }else if(!checkLogin) {
-                return@OnClickListener
-            }else{
+            if(checkLogin) {
                 login()
             }
-
-//            if (!checkLogin) return@OnClickListener
-//            else{
-//
-//            }
         })
     }
 
@@ -102,16 +97,17 @@ class MainActivity : AppCompatActivity() {
         val stringRequest: StringRequest =
             object : StringRequest(Method.POST, UserApi.LOGIN, Response.Listener { response ->
                 val gson = Gson()
-                var user = gson.fromJson(response, User::class.java)
+                var user = gson.fromJson(response, Member::class.java)
 
                 if(user != null)
-                    MotionToast.createToast(this@MainActivity,
-                        "Hurray success",
-                        "BERHASIL LOGIN",
-                        MotionToastStyle.SUCCESS,
-                        MotionToast.GRAVITY_BOTTOM,
-                        MotionToast.LONG_DURATION,
-                        ResourcesCompat.getFont(this, www.sanju.motiontoast.R.font.helvetica_regular))
+                    Toast.makeText(this@MainActivity, "Berhasil Login", Toast.LENGTH_SHORT).show()
+//                    MotionToast.createToast(this@MainActivity,
+//                        "Hurray success",
+//                        "BERHASIL LOGIN",
+//                        MotionToastStyle.SUCCESS,
+//                        MotionToast.GRAVITY_BOTTOM,
+//                        MotionToast.LONG_DURATION,
+//                        ResourcesCompat.getFont(this, www.sanju.motiontoast.R.font.helvetica_regular))
                 val sharedPreference =  getSharedPreferences(myPreference, Context.MODE_PRIVATE)
                 var editor = sharedPreference.edit()
                 editor.putString("username",inputUsername.getEditText()?.getText().toString())
@@ -125,13 +121,14 @@ class MainActivity : AppCompatActivity() {
                 try {
                     val responseBody = String(error.networkResponse.data, StandardCharsets.UTF_8)
                     val errors = JSONObject(responseBody)
-                    MotionToast.createToast(this@MainActivity,
-                        "Failed",
-                        errors.getString("message"),
-                        MotionToastStyle.ERROR,
-                        MotionToast.GRAVITY_BOTTOM,
-                        MotionToast.LONG_DURATION,
-                        ResourcesCompat.getFont(this, www.sanju.motiontoast.R.font.helvetica_regular))
+                    Toast.makeText(this@MainActivity, "message", Toast.LENGTH_LONG).show()
+//                    MotionToast.createToast(this@MainActivity,
+//                        "Failed",
+//                        errors.getString("message"),
+//                        MotionToastStyle.ERROR,
+//                        MotionToast.GRAVITY_BOTTOM,
+//                        MotionToast.LONG_DURATION,
+//                        ResourcesCompat.getFont(this, www.sanju.motiontoast.R.font.helvetica_regular))
                 } catch (e: Exception) {
                     Toast.makeText(this@MainActivity, e.message, Toast.LENGTH_LONG).show()
                 }
