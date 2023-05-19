@@ -17,7 +17,6 @@ import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import com.example.p3l_android.MainActivity
 import com.example.p3l_android.R
 import com.example.p3l_android.api.BookingGymApi
 import com.example.p3l_android.models.BookingGym
@@ -109,11 +108,7 @@ class FragmentGym : Fragment() {
                             "Data Berhasil Ditambahkan",
                             Toast.LENGTH_SHORT
                         ).show()
-
-                    val returnIntent = Intent()
-                    requireActivity().setResult(Activity.RESULT_OK, returnIntent)
-                    requireActivity().finish()
-
+                    clearTextFields()
                     setLoading(false)
                 },
                 Response.ErrorListener { error ->
@@ -124,10 +119,10 @@ class FragmentGym : Fragment() {
                         Toast.makeText(
                             requireContext(),
                             errors.getString("message"),
-                            Toast.LENGTH_SHORT
+                            Toast.LENGTH_LONG
                         ).show()
                     } catch (e: Exception) {
-                        Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), e.message, Toast.LENGTH_LONG).show()
                     }
                 }) {
                 @Throws(AuthFailureError::class)
@@ -150,6 +145,11 @@ class FragmentGym : Fragment() {
             }
 
         queue!!.add(stringRequest)
+    }
+
+    private fun clearTextFields() {
+        etTanggal?.setText("")
+        edSlotWaktu?.setText("")
     }
 
     private fun setLoading(isLoading: Boolean) {
