@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeActivity">
+    tools:context=".memberView.HomeMemberActivity">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/layoutFragment"
@@ -14,7 +14,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:name="com.example.p3l_android.fragments.FragmentGym"
+        android:name="com.example.p3l_android.memberView.fragments.FragmentGym"
         tools:layout="@layout/fragment_gym" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView

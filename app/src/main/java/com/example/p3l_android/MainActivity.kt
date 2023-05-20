@@ -2,7 +2,6 @@ package com.example.p3l_android
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -11,8 +10,7 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.content.res.ResourcesCompat
-import androidx.databinding.adapters.TextViewBindingAdapter.setText
+import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.AuthFailureError
 import com.android.volley.RequestQueue
 import com.android.volley.Response
@@ -20,6 +18,9 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.p3l_android.api.UserApi
 import com.example.p3l_android.databinding.ActivityMainBinding
+import com.example.p3l_android.instrukturView.HomeInstrukturActivity
+import com.example.p3l_android.memberView.HomeMemberActivity
+import com.example.p3l_android.moView.HomeMOActivity
 import com.example.p3l_android.models.Auth
 import com.example.p3l_android.models.Member
 import com.google.android.material.textfield.TextInputEditText
@@ -27,7 +28,6 @@ import com.google.android.material.textfield.TextInputLayout
 import com.google.gson.Gson
 import org.json.JSONObject
 import java.nio.charset.StandardCharsets
-import java.util.ResourceBundle.getBundle
 
 class MainActivity : AppCompatActivity() {
     private lateinit var inputUsername: TextInputLayout
@@ -70,7 +70,6 @@ class MainActivity : AppCompatActivity() {
         btnLogin.setOnClickListener(View.OnClickListener {
             var checkLogin = false
 
-
             if (inputUsername.getEditText()?.getText().toString().isEmpty()) {
                 inputUsername.setError("Username must be filled with text")
             }else{
@@ -102,6 +101,8 @@ class MainActivity : AppCompatActivity() {
                     val gson = Gson()
                     val jsonResponse = JSONObject(response)
                     val userResponse = gson.fromJson(jsonResponse.getString("data"), Member::class.java)
+                    val userType = jsonResponse.getString("userType") // Get the userType as a string directly
+                    Log.d("userType", userType)
 
                     if (userResponse != null) {
                         val userId = userResponse.id_member // Get the user ID from the response
@@ -113,13 +114,27 @@ class MainActivity : AppCompatActivity() {
                         Log.d("userId", userId.toString())
                         editor.apply()
 
-                        val moveHome = Intent(this@MainActivity, HomeActivity::class.java)
-                        startActivity(moveHome)
+                        // Navigate to the appropriate activity based on the user type
+                        when (userType) {
+                            "pegawai" -> {
+                                val moveHomePegawai = Intent(this@MainActivity, HomeMOActivity::class.java)
+                                startActivity(moveHomePegawai)
+                            }
+                            "member" -> {
+                                val moveHomeMember = Intent(this@MainActivity, HomeMemberActivity::class.java)
+                                startActivity(moveHomeMember)
+                            }
+                            "instruktur" -> {
+                                val moveHomeInstruktur = Intent(this@MainActivity, HomeInstrukturActivity::class.java)
+                                startActivity(moveHomeInstruktur)
+                            }
+                        }
                     }
                     setLoading(false)
                 } catch (e: Exception) {
                     setLoading(false)
                     Toast.makeText(this@MainActivity, e.message, Toast.LENGTH_LONG).show()
+                    Log.d("error", e.message.toString())
                 }
             }, Response.ErrorListener { error ->
                 setLoading(false)
@@ -153,7 +168,6 @@ class MainActivity : AppCompatActivity() {
         // Menambahkan request ke request queue
         queue!!.add(stringRequest)
     }
-
 
     fun getBundle(){
         try{

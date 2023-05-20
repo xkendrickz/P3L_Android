@@ -1,24 +1,25 @@
-package com.example.p3l_android
+package com.example.p3l_android.memberView
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
-import com.example.p3l_android.fragments.FragmentClass
-import com.example.p3l_android.fragments.FragmentGym
-import com.example.p3l_android.fragments.FragmentHome
-import com.example.p3l_android.fragments.FragmentProfile
+import com.example.p3l_android.R
+import com.example.p3l_android.memberView.fragments.FragmentClass
+import com.example.p3l_android.memberView.fragments.FragmentGym
+import com.example.p3l_android.memberView.fragments.FragmentHome
+import com.example.p3l_android.memberView.fragments.FragmentProfile
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class HomeActivity : AppCompatActivity() {
+class HomeMemberActivity : AppCompatActivity() {
     lateinit var bottomNav : BottomNavigationView
     lateinit var mbundle : Bundle
     lateinit var vKey : String
     private val myPreference = "myPref"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
+        setContentView(R.layout.activity_home_member)
 
         getSupportActionBar()?.hide()
         changeFragment(FragmentHome())

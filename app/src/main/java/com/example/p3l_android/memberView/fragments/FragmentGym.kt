@@ -1,33 +1,26 @@
-package com.example.p3l_android.fragments
+package com.example.p3l_android.memberView.fragments
 
-import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.*
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.android.volley.AuthFailureError
-import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.Response
-import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.p3l_android.R
 import com.example.p3l_android.api.BookingGymApi
 import com.example.p3l_android.models.BookingGym
-import com.example.p3l_android.models.BookingGymCreate
 import com.google.gson.Gson
-import org.json.JSONException
 import org.json.JSONObject
 import java.nio.charset.StandardCharsets
 import java.text.SimpleDateFormat
@@ -117,7 +110,7 @@ class FragmentGym : Fragment() {
     private fun createMahasiswa() {
         setLoading(true)
 
-        val bookingGym = BookingGymCreate(
+        val bookingGym = BookingGym(
             userId,
             etTanggal!!.text.toString(),
             edSlotWaktu!!.text.toString(),

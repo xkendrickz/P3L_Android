@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    tools:context=".fragments.FragmentGym">
+    tools:context=".memberView.fragments.FragmentGym">
 
     <ScrollView
         android:id="@+id/scroll_view"

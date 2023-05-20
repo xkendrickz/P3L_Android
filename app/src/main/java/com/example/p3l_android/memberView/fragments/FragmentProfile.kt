@@ -1,12 +1,10 @@
-package com.example.p3l_android.fragments
+package com.example.p3l_android.memberView.fragments
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
+import androidx.fragment.app.Fragment
 import com.example.p3l_android.GuestActivity
 import com.example.p3l_android.MainActivity
 import com.example.p3l_android.R
