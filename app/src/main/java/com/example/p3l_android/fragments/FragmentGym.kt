@@ -12,15 +12,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.android.volley.AuthFailureError
+import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.Response
+import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.p3l_android.R
 import com.example.p3l_android.api.BookingGymApi
 import com.example.p3l_android.models.BookingGym
+import com.example.p3l_android.models.BookingGymCreate
 import com.google.gson.Gson
+import org.json.JSONException
 import org.json.JSONObject
 import java.nio.charset.StandardCharsets
 import java.text.SimpleDateFormat
@@ -40,6 +47,7 @@ class FragmentGym : Fragment() {
     }
 
     private var etTanggal: EditText? = null
+    private var edTanggal2: AutoCompleteTextView? = null
     private var edSlotWaktu: AutoCompleteTextView? = null
     private var layoutLoading: LinearLayout? = null
     private var queue: RequestQueue? = null
@@ -53,20 +61,38 @@ class FragmentGym : Fragment() {
         val view = inflater.inflate(R.layout.fragment_gym, container, false)
         queue = Volley.newRequestQueue(requireContext())
         etTanggal = view.findViewById(R.id.etTanggal)
+        edTanggal2 = view.findViewById(R.id.edTanggal2)
         edSlotWaktu = view.findViewById(R.id.edSlotWaktu)
         layoutLoading = view.findViewById(R.id.layout_loading)
         val sharedPreference =
             requireContext().getSharedPreferences(myPreference, Context.MODE_PRIVATE)
         userId = sharedPreference.getInt("userId", -1)
 
+        getBookingGymDatesFromBackend().observe(viewLifecycleOwner, Observer { bookingGymDates ->
+            // Lakukan tindakan dengan bookingGymDates di sini
+            if (bookingGymDates != null) {
+                // Contoh: Set adapter untuk edTanggal2 dropdown
+                val adapterTanggal: ArrayAdapter<String> = ArrayAdapter<String>(
+                    requireContext(),
+                    R.layout.item_list,
+                    bookingGymDates
+                )
+                edTanggal2!!.setAdapter(adapterTanggal)
+            }
+        })
         setExposedDropDownMenu()
 
         val btnCancel = view.findViewById<Button>(R.id.btn_cancel)
-        btnCancel.setOnClickListener { requireActivity().finish() }
+        btnCancel.setOnClickListener {
+            val selectedTanggal = edTanggal2?.text.toString()
+            if (selectedTanggal.isNotEmpty()) {
+                deleteBooking(selectedTanggal)
+            } else {
+                Toast.makeText(requireContext(), "Please select a Date", Toast.LENGTH_SHORT).show()
+            }
+        }
         val btnSave = view.findViewById<Button>(R.id.btn_save)
-        val tvTitle = view.findViewById<TextView>(R.id.tv_title)
 
-        tvTitle.text = "Booking Gym"
         btnSave.setOnClickListener { createMahasiswa() }
 
         // Set click listener for the date EditText
@@ -91,7 +117,7 @@ class FragmentGym : Fragment() {
     private fun createMahasiswa() {
         setLoading(true)
 
-        val bookingGym = BookingGym(
+        val bookingGym = BookingGymCreate(
             userId,
             etTanggal!!.text.toString(),
             edSlotWaktu!!.text.toString(),
@@ -105,7 +131,7 @@ class FragmentGym : Fragment() {
                     if (bookingGym != null)
                         Toast.makeText(
                             requireContext(),
-                            "Data Berhasil Ditambahkan",
+                            "Booking Berhasil Ditambahkan",
                             Toast.LENGTH_SHORT
                         ).show()
                     clearTextFields()
@@ -144,6 +170,79 @@ class FragmentGym : Fragment() {
                 }
             }
 
+        queue!!.add(stringRequest)
+    }
+
+    private fun getBookingGymDatesFromBackend(): LiveData<ArrayList<String>> {
+        val bookingGymDates = MutableLiveData<ArrayList<String>>()
+
+        val stringRequest: StringRequest = object : StringRequest(
+            Method.GET, BookingGymApi.GET_BY_ID_URL + userId,
+            Response.Listener { response ->
+                val jsonObject = JSONObject(response)
+                val jsonArray = jsonObject.getJSONArray("data")
+                val dates = ArrayList<String>()
+                for (i in 0 until jsonArray.length()) {
+                    val bookingGym = jsonArray.getJSONObject(i)
+                    val tanggal = bookingGym.getString("tanggal")
+                    dates.add(tanggal)
+                }
+                bookingGymDates.value = dates
+            },
+            Response.ErrorListener { error ->
+                try {
+                    val responseBody = String(error.networkResponse.data, StandardCharsets.UTF_8)
+                    val errors = JSONObject(responseBody)
+                    Toast.makeText(
+                        requireContext(),
+                        errors.getString("message"),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } catch (e: Exception) {
+                    Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
+                }
+            }) {
+            @Throws(AuthFailureError::class)
+            override fun getHeaders(): Map<String, String> {
+                val headers = HashMap<String, String>()
+                headers["Accept"] = "application/json"
+                return headers
+            }
+        }
+
+        queue!!.add(stringRequest)
+        return bookingGymDates
+    }
+
+    private fun deleteBooking(tanggal: String) {
+        setLoading(true)
+
+        val stringRequest: StringRequest = object :
+            StringRequest(Method.DELETE, BookingGymApi.DELETE_URL + userId + "/" + tanggal, Response.Listener { response ->
+                setLoading(false)
+                Toast.makeText(requireContext(), "Booking successfully added", Toast.LENGTH_SHORT).show()
+            }, Response.ErrorListener { error ->
+                setLoading(false)
+                try {
+                    val responseBody = String(error.networkResponse.data, StandardCharsets.UTF_8)
+                    val errors = JSONObject(responseBody)
+                    Toast.makeText(
+                        requireContext(),
+                        errors.getString("message"),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } catch (e: Exception) {
+                    Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
+                }
+            }) {
+            // Add headers to the request
+            @Throws(AuthFailureError::class)
+            override fun getHeaders(): Map<String, String> {
+                val headers = HashMap<String, String>()
+                headers["Accept"] = "application/json"
+                return headers
+            }
+        }
         queue!!.add(stringRequest)
     }
 

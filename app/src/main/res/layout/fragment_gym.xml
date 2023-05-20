@@ -23,7 +23,6 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tv_title"
                 style="@style/TextAppearance.AppCompat.Title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -58,6 +57,30 @@
 
                 <AutoCompleteTextView
                     android:id="@+id/edSlotWaktu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                style="@style/TextAppearance.AppCompat.Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:text="Cancel Booking Gym" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layoutTanggal2"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="8dp"
+                android:hint="Slot Waktu" >
+
+                <AutoCompleteTextView
+                    android:id="@+id/edTanggal2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="none" />
