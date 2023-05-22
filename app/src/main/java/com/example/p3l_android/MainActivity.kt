@@ -20,7 +20,7 @@ import com.example.p3l_android.api.UserApi
 import com.example.p3l_android.databinding.ActivityMainBinding
 import com.example.p3l_android.instrukturView.HomeInstrukturActivity
 import com.example.p3l_android.memberView.HomeMemberActivity
-import com.example.p3l_android.moView.HomeMOActivity
+import com.example.p3l_android.pegawaiView.HomePegawaiActivity
 import com.example.p3l_android.models.Auth
 import com.example.p3l_android.models.Member
 import com.google.android.material.textfield.TextInputEditText
@@ -117,7 +117,7 @@ class MainActivity : AppCompatActivity() {
                         // Navigate to the appropriate activity based on the user type
                         when (userType) {
                             "pegawai" -> {
-                                val moveHomePegawai = Intent(this@MainActivity, HomeMOActivity::class.java)
+                                val moveHomePegawai = Intent(this@MainActivity, HomePegawaiActivity::class.java)
                                 startActivity(moveHomePegawai)
                             }
                             "member" -> {

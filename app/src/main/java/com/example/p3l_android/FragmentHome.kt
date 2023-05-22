@@ -1,4 +1,4 @@
-package com.example.p3l_android.memberView.fragments
+package com.example.p3l_android
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

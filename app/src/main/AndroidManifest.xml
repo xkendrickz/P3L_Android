@@ -17,7 +17,21 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".moView.HomeMOActivity"
+            android:name=".pegawaiView.KelasActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".pegawaiView.PresensiInstrukturActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".pegawaiView.HomePegawaiActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
