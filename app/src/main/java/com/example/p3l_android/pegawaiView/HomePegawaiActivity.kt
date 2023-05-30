@@ -7,9 +7,7 @@ import android.util.Log
 import androidx.fragment.app.Fragment
 import com.example.p3l_android.FragmentHome
 import com.example.p3l_android.R
-import com.example.p3l_android.memberView.fragments.FragmentClass
-import com.example.p3l_android.memberView.fragments.FragmentGym
-import com.example.p3l_android.memberView.fragments.FragmentProfile
+import com.example.p3l_android.memberView.fragments.FragmentProfileMember
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class HomePegawaiActivity : AppCompatActivity() {
@@ -40,9 +38,9 @@ class HomePegawaiActivity : AppCompatActivity() {
                     true
                 }
                 R.id.menu_profile ->{
-                    supportFragmentManager.beginTransaction().replace(R.id.layoutFragment, FragmentProfile())
+                    supportFragmentManager.beginTransaction().replace(R.id.layoutFragment, FragmentProfileMember())
                         .commit()
-                    changeFragment(FragmentProfile())
+                    changeFragment(FragmentProfilePegawai())
                     true
                 }
                 else -> false

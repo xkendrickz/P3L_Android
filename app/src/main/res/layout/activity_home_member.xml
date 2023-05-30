@@ -14,8 +14,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:name="com.example.p3l_android.memberView.fragments.FragmentGym"
-        tools:layout="@layout/fragment_gym" />
+        android:name="com.example.p3l_android.memberView.fragments.FragmentProfileMember"
+        tools:layout="@layout/fragment_profile_member" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"

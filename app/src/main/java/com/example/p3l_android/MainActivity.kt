@@ -100,31 +100,43 @@ class MainActivity : AppCompatActivity() {
                 try {
                     val gson = Gson()
                     val jsonResponse = JSONObject(response)
-                    val userResponse = gson.fromJson(jsonResponse.getString("data"), Member::class.java)
+                    val userResponse = gson.fromJson(jsonResponse.getString("data"), Auth::class.java)
                     val userType = jsonResponse.getString("userType") // Get the userType as a string directly
                     Log.d("userType", userType)
 
                     if (userResponse != null) {
-                        val userId = userResponse.id_member // Get the user ID from the response
-                        Toast.makeText(this@MainActivity, "Berhasil Login", Toast.LENGTH_SHORT).show()
-
-                        val sharedPreference = getSharedPreferences(myPreference, Context.MODE_PRIVATE)
-                        val editor = sharedPreference.edit()
-                        editor.putInt("userId", userId) // Store the user ID in shared preferences
-                        Log.d("userId", userId.toString())
-                        editor.apply()
-
                         // Navigate to the appropriate activity based on the user type
                         when (userType) {
                             "pegawai" -> {
+                                val userId = userResponse.id_pegawai // Get the user ID from the response
+                                Toast.makeText(this@MainActivity, "Berhasil Login", Toast.LENGTH_SHORT).show()
+                                val sharedPreference = getSharedPreferences(myPreference, Context.MODE_PRIVATE)
+                                val editor = sharedPreference.edit()
+                                editor.putInt("userId", userId!!) // Store the user ID in shared preferences
+                                editor.apply()
+                                Log.d("userId",userId.toString())
                                 val moveHomePegawai = Intent(this@MainActivity, HomePegawaiActivity::class.java)
                                 startActivity(moveHomePegawai)
                             }
                             "member" -> {
+                                val userId = userResponse.id_member // Get the user ID from the response
+                                Toast.makeText(this@MainActivity, "Berhasil Login", Toast.LENGTH_SHORT).show()
+                                val sharedPreference = getSharedPreferences(myPreference, Context.MODE_PRIVATE)
+                                val editor = sharedPreference.edit()
+                                editor.putInt("userId", userId!!) // Store the user ID in shared preferences
+                                editor.apply()
+                                Log.d("userId",userId.toString())
                                 val moveHomeMember = Intent(this@MainActivity, HomeMemberActivity::class.java)
                                 startActivity(moveHomeMember)
                             }
                             "instruktur" -> {
+                                val userId = userResponse.id_instruktur // Get the user ID from the response
+                                Toast.makeText(this@MainActivity, "Berhasil Login", Toast.LENGTH_SHORT).show()
+                                val sharedPreference = getSharedPreferences(myPreference, Context.MODE_PRIVATE)
+                                val editor = sharedPreference.edit()
+                                editor.putInt("userId", userId!!) // Store the user ID in shared preferences
+                                editor.apply()
+                                Log.d("userId",userId.toString())
                                 val moveHomeInstruktur = Intent(this@MainActivity, HomeInstrukturActivity::class.java)
                                 startActivity(moveHomeInstruktur)
                             }

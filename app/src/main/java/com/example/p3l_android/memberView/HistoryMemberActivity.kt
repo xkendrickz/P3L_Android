@@ -5,24 +5,22 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
-import com.example.p3l_android.R
-import com.example.p3l_android.memberView.fragments.FragmentClass
-import com.example.p3l_android.memberView.fragments.FragmentGym
 import com.example.p3l_android.FragmentHome
-import com.example.p3l_android.memberView.fragments.FragmentProfileMember
+import com.example.p3l_android.R
+import com.example.p3l_android.memberView.fragments.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class HomeMemberActivity : AppCompatActivity() {
+class HistoryMemberActivity : AppCompatActivity() {
     lateinit var bottomNav : BottomNavigationView
     lateinit var mbundle : Bundle
     lateinit var vKey : String
     private val myPreference = "myPref"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home_member)
+        setContentView(R.layout.activity_history_member)
 
         getSupportActionBar()?.hide()
-        changeFragment(FragmentHome())
+        changeFragment(FragmentHistoryTransaksi())
         getBundle()
         val sharedPreference = getSharedPreferences(myPreference, Context.MODE_PRIVATE)
         val usernameKey = sharedPreference!!.getString("username","")
@@ -31,22 +29,12 @@ class HomeMemberActivity : AppCompatActivity() {
         Log.d("key",vKey)
         bottomNav.setOnNavigationItemSelectedListener {
             when (it.itemId) {
-                R.id.menu_home -> {
-                    changeFragment(FragmentHome())
+                R.id.menu_transaksi -> {
+                    changeFragment(FragmentHistoryTransaksi())
                     true
                 }
-                R.id.menu_gym -> {
-                    changeFragment(FragmentGym())
-                    true
-                }
-                R.id.menu_class -> {
-                    changeFragment(FragmentClass())
-                    true
-                }
-                R.id.menu_profile ->{
-                    supportFragmentManager.beginTransaction().replace(R.id.layoutFragment, FragmentProfileMember())
-                        .commit()
-                    changeFragment(FragmentProfileMember())
+                R.id.menu_presensi -> {
+                    changeFragment(FragmentHistoryPresensi())
                     true
                 }
                 else -> false
