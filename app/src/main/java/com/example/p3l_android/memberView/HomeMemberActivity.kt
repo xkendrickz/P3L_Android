@@ -25,7 +25,7 @@ class HomeMemberActivity : AppCompatActivity() {
         changeFragment(FragmentHome())
         getBundle()
         val sharedPreference = getSharedPreferences(myPreference, Context.MODE_PRIVATE)
-        val usernameKey = sharedPreference!!.getString("username","")
+        val usernameKey = sharedPreference!!.getString("username","1")
         Log.d("tes",usernameKey!!)
         bottomNav = findViewById(R.id.bottom_navigation)
         Log.d("key",vKey)

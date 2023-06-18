@@ -77,7 +77,7 @@ class FragmentProfileMember : Fragment() {
 
         val sharedPreference =
             requireContext().getSharedPreferences(myPreference, Context.MODE_PRIVATE)
-        userId = sharedPreference.getInt("userId", -1)
+        userId = sharedPreference.getInt("userId", 1)
         setText()
         return view
     }

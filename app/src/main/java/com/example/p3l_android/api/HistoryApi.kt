@@ -3,7 +3,7 @@ package com.example.p3l_android.api
 class HistoryApi {
     companion object{
         //insert your ip address
-        val BASE_URL = "http://192.168.43.231:8000/api/"
+        val BASE_URL = "https://gofit123.xyz/p3l_laravel/public/"
 
         val GET_HISTORY_TRANSAKSI = BASE_URL + "historyMemberTransaksi/"
         val GET_HISTORY_PRESENSI = BASE_URL + "historyMemberPresensi/"

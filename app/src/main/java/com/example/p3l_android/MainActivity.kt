@@ -153,7 +153,7 @@ class MainActivity : AppCompatActivity() {
                 try {
                     val responseBody = String(error.networkResponse.data, StandardCharsets.UTF_8)
                     val errors = JSONObject(responseBody)
-                    Toast.makeText(this@MainActivity, "message", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@MainActivity, errors.toString(), Toast.LENGTH_LONG).show()
                 } catch (e: Exception) {
                     Toast.makeText(this@MainActivity, e.message, Toast.LENGTH_LONG).show()
                 }
